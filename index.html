@@ -78,6 +78,30 @@ section{position:relative;z-index:1;padding:5rem 2rem}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .status-updated{font-size:0.65rem;color:#374151;margin-top:1.2rem;letter-spacing:0.03em}
 
+/* CẬP NHẬT MỚI NHẤT (feed thông báo + legit, real-time từ bot) */
+.updates-wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border)}
+.update-panel{background:var(--surface)}
+.update-panel-head{display:flex;align-items:center;gap:0.6rem;padding:1.1rem 1.6rem;border-bottom:1px solid var(--border)}
+.update-panel-icon{font-size:1rem}
+.update-panel-title{font-family:'Cinzel',serif;font-size:0.85rem;font-weight:700;color:var(--gold);letter-spacing:0.06em}
+.update-panel.legit .update-panel-title{color:var(--green)}
+.update-panel-badge{margin-left:auto;font-size:0.62rem;font-weight:600;color:var(--green);letter-spacing:0.08em;text-transform:uppercase;display:flex;align-items:center;gap:0.35rem}
+.update-panel-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.7);animation:pulse 2s ease-in-out infinite}
+.feed-list{display:flex;flex-direction:column;min-height:60px}
+.feed-item{display:flex;gap:0.85rem;padding:0.95rem 1.6rem;text-decoration:none;color:inherit;border-bottom:1px solid rgba(212,168,67,0.08);transition:background 0.2s;animation:fadeIn 0.5s ease both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.feed-item:last-child{border-bottom:none}
+.feed-item:hover{background:var(--surface2)}
+.feed-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;object-fit:cover;border:1.5px solid var(--border);background:var(--surface2)}
+.feed-body{min-width:0;flex:1}
+.feed-meta{display:flex;align-items:baseline;gap:0.55rem;margin-bottom:0.2rem}
+.feed-author{font-size:0.8rem;font-weight:600;color:#fff}
+.feed-time{font-size:0.68rem;color:#4b5563;flex-shrink:0}
+.feed-text{font-size:0.83rem;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.feed-attach{margin-top:0.5rem;max-width:150px;max-height:100px;border-radius:6px;object-fit:cover;border:1px solid var(--border);display:block}
+.feed-empty{padding:2.2rem 1.6rem;text-align:center;color:#4b5563;font-size:0.82rem}
+.feed-item-skel{height:52px;margin:0.7rem 1.6rem;border-radius:6px;background:linear-gradient(90deg,var(--surface2) 25%,rgba(255,255,255,0.06) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
+
 /* SERVICES */
 .services-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
 .service-card{background:var(--surface);padding:2rem 1.5rem;transition:background 0.2s}
@@ -112,6 +136,22 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2r
 .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
 
+/* Animation từng phần bên trong mỗi section — mỗi ô hiện lần lượt (cascade) khi section cuộn tới, thay vì hiện cùng lúc */
+.stat,.status-card,.service-card,.community-feature,.update-panel{
+  opacity:0;transform:translateY(16px);
+  transition:opacity 0.6s ease,transform 0.6s ease;
+}
+.reveal.visible .stat,.reveal.visible .status-card,
+.reveal.visible .service-card,.reveal.visible .community-feature,
+.reveal.visible .update-panel{
+  opacity:1;transform:translateY(0);
+}
+.stat:nth-child(1),.status-card:nth-child(1),.service-card:nth-child(1),.community-feature:nth-child(1),.update-panel:nth-child(1){transition-delay:.05s}
+.stat:nth-child(2),.status-card:nth-child(2),.service-card:nth-child(2),.community-feature:nth-child(2),.update-panel:nth-child(2){transition-delay:.14s}
+.stat:nth-child(3),.status-card:nth-child(3),.service-card:nth-child(3),.community-feature:nth-child(3){transition-delay:.23s}
+.community-feature:nth-child(4){transition-delay:.32s}
+.community-feature:nth-child(5){transition-delay:.41s}
+
 @media(max-width:768px){
   .nav-links{display:none}
   .nav-links.open{display:flex;flex-direction:column;position:fixed;top:60px;left:0;right:0;background:rgba(8,10,12,0.98);padding:2rem;gap:1.5rem;border-bottom:1px solid var(--border);backdrop-filter:blur(20px)}
@@ -123,6 +163,9 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2r
   .dot.on{animation:none}
   .status-skel{animation:none}
   .reveal{transition:none}
+  .stat,.status-card,.service-card,.community-feature,.update-panel{transition:none;transition-delay:0s;opacity:1;transform:none}
+  .feed-item{animation:none}
+  .update-panel-badge::before{animation:none}
   html{scroll-behavior:auto}
 }
 </style>
@@ -136,6 +179,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2r
   <div class="nav-logo">TUYTAM COMMUNITY</div>
   <div class="nav-links" id="navLinks">
     <a href="#status">Trạng Thái Server</a>
+    <a href="#updates">Cập Nhật</a>
     <a href="#services">Dịch Vụ</a>
     <a href="#community">Cộng Đồng</a>
     <a class="nav-cta" href="https://discord.gg/FkC45DwtyN" target="_blank" rel="noopener">Tham Gia Discord</a>
@@ -186,6 +230,41 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2r
       </div>
       <div id="donut-body"><div class="status-skel"></div></div>
       <div class="status-updated" id="donut-updated"></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="updates">
+  <div class="section-header reveal">
+    <span class="section-eyebrow">✦ Live Feed</span>
+    <h2 class="section-title">Cập Nhật <span>Mới Nhất</span></h2>
+  </div>
+  <div class="updates-wrap reveal">
+    <div class="update-panel">
+      <div class="update-panel-head">
+        <span class="update-panel-icon">📢</span>
+        <span class="update-panel-title">Thông Báo</span>
+        <span class="update-panel-badge">Live</span>
+      </div>
+      <div class="feed-list" id="feed-thongbao">
+        <div class="feed-item-skel"></div>
+        <div class="feed-item-skel"></div>
+        <div class="feed-item-skel"></div>
+      </div>
+    </div>
+    <div class="update-panel legit">
+      <div class="update-panel-head">
+        <span class="update-panel-icon">✅</span>
+        <span class="update-panel-title">Vouch / Legit</span>
+        <span class="update-panel-badge">Live</span>
+      </div>
+      <div class="feed-list" id="feed-legit">
+        <div class="feed-item-skel"></div>
+        <div class="feed-item-skel"></div>
+        <div class="feed-item-skel"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -304,15 +383,62 @@ function renderDonut(d){
     <div class="status-sub">${d.host || 'donutsmp.net'} · Online</div>`;
 }
 
+/* ══════════════════════════════════════════
+   CẬP NHẬT MỚI NHẤT — feed thông báo/legit từ bot Rudy (Mongo qua backend)
+   ══════════════════════════════════════════ */
+
+// Escape HTML an toàn — nội dung feed đến từ tin nhắn Discord của user (không đáng tin),
+// PHẢI escape trước khi chèn vào innerHTML để tránh XSS.
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s ?? '';
+  return d.innerHTML;
+}
+
+function relTime(iso){
+  if (!iso) return '';
+  const diffSec = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime())/1000));
+  if (diffSec < 60)   return 'Vừa xong';
+  const min = Math.floor(diffSec/60);
+  if (min < 60)  return `${min} phút trước`;
+  const hr = Math.floor(min/60);
+  if (hr < 24)   return `${hr} giờ trước`;
+  const day = Math.floor(hr/24);
+  if (day < 7)   return `${day} ngày trước`;
+  return new Date(iso).toLocaleDateString('vi-VN');
+}
+
+function renderFeedList(containerId, items, emptyText){
+  const el = document.getElementById(containerId);
+  if (!items || items.length === 0){
+    el.innerHTML = `<div class="feed-empty">${emptyText}</div>`;
+    return;
+  }
+  el.innerHTML = items.map(it => `
+    <a class="feed-item" href="${it.jump_url ? escapeHtml(it.jump_url) : '#'}" target="_blank" rel="noopener">
+      <img class="feed-avatar" src="${it.author_avatar ? escapeHtml(it.author_avatar) : ''}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+      <div class="feed-body">
+        <div class="feed-meta"><span class="feed-author">${escapeHtml(it.author_name)}</span><span class="feed-time">${relTime(it.timestamp)}</span></div>
+        <div class="feed-text">${escapeHtml(it.content)}</div>
+        ${it.attachment_url ? `<img class="feed-attach" src="${escapeHtml(it.attachment_url)}" alt="" loading="lazy">` : ''}
+      </div>
+    </a>
+  `).join('');
+}
+
 async function loadStatus(){
   try {
     const res  = await fetch(`${STATUS_API}/status/all`);
     const data = await res.json();
     renderDiscord(data.discord);
     renderDonut(data.donutsmp);
+    renderFeedList('feed-thongbao', data.feed?.thongbao, 'Chưa có thông báo nào gần đây.');
+    renderFeedList('feed-legit',    data.feed?.legit,    'Chưa có vouch nào gần đây.');
   } catch (e) {
     renderDiscord(null);
     renderDonut(null);
+    renderFeedList('feed-thongbao', null, 'Không tải được dữ liệu.');
+    renderFeedList('feed-legit', null, 'Không tải được dữ liệu.');
   }
   const stamp = nowLabel();
   document.getElementById('discord-updated').textContent = stamp;
